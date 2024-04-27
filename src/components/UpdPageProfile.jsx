@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const UpdPage = () => {
   return (
@@ -179,7 +180,15 @@ a.list-group-item, .list-group-item-action {
     width: 3px;
     height: 100%;
     background-color: transparent;
-    content: '';
+    content: '';}
+
+    .no-underline {
+      text-decoration: none;
+  }
+  a{
+    color: black;
+    text-decoration: none;
+  }
 }`}
       </style>
       <link
@@ -222,28 +231,25 @@ a.list-group-item, .list-group-item-action {
             </div>
             <div class="wizard">
               <nav class="list-group list-group-flush">
-                <a class="list-group-item" href="#">
+                <Link to="/orders-list" class="list-group-item">
                   <div class="d-flex justify-content-between align-items-center">
                     <div>
                       <i class="fe-icon-shopping-bag mr-1 text-muted"></i>
-                      <div class="d-inline-block font-weight-medium text-uppercase">
+
+                      <div class=" no-underline d-inline-block font-weight-medium text-uppercase ">
                         Orders List
                       </div>
                     </div>
                     <span class="badge badge-secondary">6</span>
                   </div>
-                </a>
+                </Link>
                 <a class="list-group-item active" href="#">
                   <i class="fe-icon-user text-muted"></i>Profile Settings
                 </a>
                 <a class="list-group-item" href="#">
                   <i class="fe-icon-map-pin text-muted"></i>Addresses
                 </a>
-                <a
-                  class="list-group-item"
-                  href="https://www.bootdey.com/snippets/view/bs4-wishlist-profile-page"
-                  target="__blank"
-                >
+                <Link to="/wish-list" class="list-group-item">
                   <div class="d-flex justify-content-between align-items-center">
                     <div>
                       <i class="fe-icon-heart mr-1 text-muted"></i>
@@ -253,12 +259,9 @@ a.list-group-item, .list-group-item-action {
                     </div>
                     <span class="badge badge-secondary">3</span>
                   </div>
-                </a>
-                <a
-                  class="list-group-item"
-                  href="https://www.bootdey.com/snippets/view/bs4-account-tickets"
-                  target="__blank"
-                >
+                </Link>
+                <Link to="" class="list-group-item">
+                  {" "}
                   <div class="d-flex justify-content-between align-items-center">
                     <div>
                       <i class="fe-icon-tag mr-1 text-muted"></i>
@@ -268,7 +271,7 @@ a.list-group-item, .list-group-item-action {
                     </div>
                     <span class="badge badge-secondary">4</span>
                   </div>
-                </a>
+                </Link>
               </nav>
             </div>
           </div>

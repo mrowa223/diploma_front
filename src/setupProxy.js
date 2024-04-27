@@ -2,9 +2,9 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 
 module.exports = function(app) {
   app.use(
-    '/api', // specify the endpoint you want to proxy
+    "/api", // Указываете путь, который будет проксироваться
     createProxyMiddleware({
-      target: 'http://localhost:3000', // specify the URL of your backend server
+      target: "https://087b-5-34-1-61.ngrok-free.app", // Указываете URL вашего удаленного сервера API
       changeOrigin: true,
     })
   );

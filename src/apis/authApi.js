@@ -1,6 +1,5 @@
 // authApi.js
 
-const baseUrl = '/api';
 
 // const fetchJson = async (url, options) => {
 //   const response = await fetch(baseUrl + url, options)
@@ -9,6 +8,10 @@ const baseUrl = '/api';
 //   }
 //   return await response.json();
 // };
+
+// const baseUrl = '/api';
+
+const baseUrl = '/api';
 
 
 const fetchJson = async (url, options) => {

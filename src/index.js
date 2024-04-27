@@ -1,20 +1,32 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import '../node_modules/font-awesome/css/font-awesome.min.css';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "../node_modules/font-awesome/css/font-awesome.min.css";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 // import Example from './pages/Example';
 
+import {
+  Home,
+  Product,
+  Products,
+  AboutPage,
+  ContactPage,
+  Cart,
+  Login,
+  Register,
+  Checkout,
+  PageNotFound,
+  OrdersListPage,
+} from "./pages";
 
-import { Home, Product, Products, AboutPage, ContactPage, Cart, Login, Register, Checkout, PageNotFound } from "./pages"
+import UpdPageProfile from "./components/UpdPageProfile";
 
-import UpdPage from './pages/UpdPage';
-import OrdersListPage from './pages/OrdersListPage';
-import WishListPage from './pages/WishListPage';
+import WishListPage from "./pages/WishListPage";
+import ProfilePage from "./pages/ProfilePage";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Provider store={store}>
@@ -28,8 +40,12 @@ root.render(
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/checkout" element={<Checkout />} />
-        <Route path="*" element={<UpdPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/orders-list" element={<OrdersListPage />} />
+        <Route path="/wish-list" element={<WishListPage />} />
+
         <Route path="/product/*" element={<PageNotFound />} />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Provider>
   </BrowserRouter>

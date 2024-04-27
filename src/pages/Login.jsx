@@ -1,35 +1,35 @@
-import React, {useState} from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Footer, Navbar } from "../components";
-import { authenticateUser } from '../apis/authApi'; // Import the registerUser function from authApi
+import { authenticateUser } from "../apis/authApi"; // Import the registerUser function from authApi
 
-const Login = () => {
-
+const Login = ({ history }) => {
   const [formData, setFormData] = useState({
     // name: '',
-    email: '',
-    password: ''
-});
-
-const handleChange = (e) => {
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-        ...prevState,
-        [name]: value
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
     }));
-};
+  };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
       // Call the registerUser function with the form data
       const authenticationResponse = await authenticateUser(formData);
-      console.log('Login response:', authenticationResponse);
-      // Optionally, redirect the user to a new page upon successful registration
-  } catch (error) {
-      console.error('Error:', error.message);
-  }
-};
+      console.log("Login response:", authenticationResponse);
+      navigate("/");
+      // Проверка на успешную аутентификацию
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
 
   return (
     <>
@@ -66,12 +66,20 @@ const handleSubmit = async (e) => {
                   required
                 />
               </div>
-              
+
               <div className="my-3">
-                <p>New Here? <Link to="/register" className="text-decoration-underline text-info">Register</Link> </p>
+                <p>
+                  New Here?{" "}
+                  <Link
+                    to="/register"
+                    className="text-decoration-underline text-info"
+                  >
+                    Register
+                  </Link>{" "}
+                </p>
               </div>
               <div className="text-center">
-                <button class="my-2 mx-auto btn btn-dark" type="submit" >
+                <button class="my-2 mx-auto btn btn-dark" type="submit">
                   Login
                 </button>
               </div>

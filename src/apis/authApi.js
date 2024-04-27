@@ -1,6 +1,5 @@
 // authApi.js
 
-
 // const fetchJson = async (url, options) => {
 //   const response = await fetch(baseUrl + url, options)
 //   if (!response.ok) {
@@ -9,61 +8,60 @@
 //   return await response.json();
 // };
 
-// const baseUrl = '/api';
+// const baseUrl = 'https://087b-5-34-1-61.ngrok-free.app';
 
-const baseUrl = '/api';
-
+const baseUrl = "api";
 
 const fetchJson = async (url, options) => {
-  const response = await fetch(baseUrl + url, options);
+  const response = await fetch(baseUrl + '/api' + url, options);
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Request failed: ${response.status} ${response.statusText}`
+    );
   }
   return await response.json();
 };
 
 export const registerUser = async (userData) => {
-  return await fetchJson('/public/register', {
-    method: 'POST',
+  return await fetchJson("/public/register", {
+    method: "POST",
     headers: {
-      // Authorization: 
-      'Content-Type': 'application/json'
+      // Authorization:
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(userData)
+    body: JSON.stringify(userData),
   });
 };
 
 export const sendForgotPasswordEmail = async (email) => {
-  return await fetchJson('/public/forgot/send', {
-    method: 'POST',
+  return await fetchJson("/public/forgot/send", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ email }),
   });
 };
 
 export const checkForgotPasswordToken = async (token) => {
-  return await fetchJson('/public/forgot/check', {
-    method: 'POST',
+  return await fetchJson("/public/forgot/check", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ token })
+    body: JSON.stringify({ token }),
   });
 };
 
 export const authenticateUser = async (credentials) => {
-  return await fetchJson('/public/authenticate', {
-    method: 'POST',
+  return await fetchJson("/public/authenticate", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(credentials)
+    body: JSON.stringify(credentials),
   });
 };
-
-
 
 // import { registerUser, sendForgotPasswordEmail, checkForgotPasswordToken, authenticateUser } from './authApi';
 

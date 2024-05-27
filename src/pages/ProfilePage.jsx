@@ -13,8 +13,9 @@ import {
   Footer,
   // WishListPage,
   OrdersListPage,
-  UpdPageProfile,
-} from "../components";
+} from "../commons";
+
+import { UpdPageProfile } from "./index";
 const ProfilePage = () => {
   return (
     <>

@@ -1,8 +1,6 @@
-export { default as Navbar } from "./Navbar";
-export { default as Main } from "./main";
-export { default as Product } from "./Products";
-export { default as Footer } from "./Footer";
-// export { default as WishList } from "./WishList";
+export { default as Cart } from "./Cart";
+export { default as Login } from "./Login";
 export { default as OrdersList } from "./OrdersList";
-export { default as UpdPageProfile } from "./UpdPageProfile";
-export { default as Products } from "./Products";
+export { default as PageNotFound } from "./PageNotFound";
+export { default as Product } from "./Product";
+export { default as Register } from "./Register";

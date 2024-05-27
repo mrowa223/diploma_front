@@ -1,5 +1,5 @@
 import React from "react";
-import { Footer, Navbar } from "../components";
+import { Footer, Navbar } from "../commons";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 const Checkout = () => {

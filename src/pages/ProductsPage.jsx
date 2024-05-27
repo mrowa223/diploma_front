@@ -8,7 +8,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { Link } from "react-router-dom";
 import { Navbar } from "../commons";
 
-const Products = () => {
+const ProductsPage = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
@@ -73,6 +73,7 @@ const Products = () => {
   const ShowProducts = () => {
     return (
       <>
+       
         <div className="buttons text-center py-5">
           <button
             className="btn btn-outline-dark btn-sm m-2"
@@ -156,6 +157,7 @@ const Products = () => {
   };
   return (
     <>
+    <Navbar />
       <div className="container my-3 py-3">
         <div className="row">
           <div className="col-12">
@@ -171,4 +173,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default ProductsPage;

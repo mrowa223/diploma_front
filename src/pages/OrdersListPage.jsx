@@ -5,9 +5,10 @@ import {
   Product,
   Footer,
   // WishListPage,
-  OrdersList,
-  UpdPageProfile,
-} from "../components";
+
+} from "../commons";
+
+import { OrdersList } from "../components/";
 const OrdersListPage = () => {
   return (
     <>

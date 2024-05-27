@@ -15,4 +15,4 @@ export const cardsApi = createApi({
   }),
 });
 
-export const {useGetCardsQuery} = cardsApi
+export const { useGetCardsQuery } = cardsApi;

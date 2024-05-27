@@ -1,20 +1,22 @@
-const baseUrl = 'http://localhost:3000';
+const baseUrl = "http://localhost:3000";
 
 const fetchJson = async (url, options) => {
   const response = await fetch(baseUrl + url, options);
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Request failed: ${response.status} ${response.statusText}`,
+    );
   }
   return await response.json();
 };
 
 export const addProduct = async (productData) => {
-  return await fetchJson('/private/seller/product/add', {
-    method: 'POST',
+  return await fetchJson("/private/seller/product/add", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(productData)
+    body: JSON.stringify(productData),
   });
 };
 
@@ -23,24 +25,22 @@ export const getProductById = async (id) => {
 };
 
 export const getAllProducts = async () => {
-  return await fetchJson('/public/product/list');
+  return await fetchJson("/public/product/list");
 };
 
 export const makeReviewOnProduct = async (id, reviewData) => {
   return await fetchJson(`/private/buyer/product/${id}/review`, {
-    method: 'GET', // Should this be a POST request instead?
+    method: "GET", // Should this be a POST request instead?
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(reviewData)
+    body: JSON.stringify(reviewData),
   });
 };
 
 export const getProductOrders = async (id) => {
   return await fetchJson(`/private/buyer/product/${id}/orders`);
 };
-
-
 
 // import { addProduct, getProductById, getAllProducts, makeReviewOnProduct, getProductOrders } from './productApi';
 

@@ -4,7 +4,7 @@ import {
   Main,
   Product,
   Footer,
-  WishListPage,
+  // WishListPage,
   OrdersList,
   UpdPageProfile,
 } from "../components";

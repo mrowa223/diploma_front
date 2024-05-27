@@ -249,17 +249,6 @@ a.list-group-item, .list-group-item-action {
                 <a class="list-group-item" href="#">
                   <i class="fe-icon-map-pin text-muted"></i>Addresses
                 </a>
-                <Link to="/wish-list" class="list-group-item">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                      <i class="fe-icon-heart mr-1 text-muted"></i>
-                      <div class="d-inline-block font-weight-medium text-uppercase">
-                        My Wishlist
-                      </div>
-                    </div>
-                    <span class="badge badge-secondary">3</span>
-                  </div>
-                </Link>
                 <Link to="" class="list-group-item">
                   {" "}
                   <div class="d-flex justify-content-between align-items-center">

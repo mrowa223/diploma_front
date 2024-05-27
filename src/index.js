@@ -23,7 +23,7 @@ import {
 
 import UpdPageProfile from "./components/UpdPageProfile";
 
-import WishListPage from "./pages/WishListPage";
+// import WishListPage from "./pages/WishListPage";
 import ProfilePage from "./pages/ProfilePage";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -42,8 +42,6 @@ root.render(
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/orders-list" element={<OrdersListPage />} />
-        <Route path="/wish-list" element={<WishListPage />} />
-
         <Route path="/product/*" element={<PageNotFound />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>

@@ -1,14 +1,14 @@
 import React from "react";
-import { Footer, Navbar, WishList } from "../components";
+import { Footer, Navbar } from "../components";
 
 const WishListPage = () => {
   return (
     <>
       <Navbar />
-      <WishList />
+      {/* <WishList /> */}
       <Footer />
     </>
   );
 };
 
-export default WishListPage;
+// export default WishListPage;

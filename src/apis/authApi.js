@@ -13,10 +13,10 @@
 const baseUrl = "api";
 
 const fetchJson = async (url, options) => {
-  const response = await fetch(baseUrl + '/api' + url, options);
+  const response = await fetch(baseUrl + "/api" + url, options);
   if (!response.ok) {
     throw new Error(
-      `Request failed: ${response.status} ${response.statusText}`
+      `Request failed: ${response.status} ${response.statusText}`,
     );
   }
   return await response.json();

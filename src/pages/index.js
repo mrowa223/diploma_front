@@ -1,4 +1,4 @@
-import { ProfileRoutes } from "./ProfilePage";
+import { ProfileRoutes } from "./ProfilePage.jsx";
 
 export { default as Home } from "./Home";
 export { default as Products } from "./Products";
@@ -13,4 +13,4 @@ export { default as PageNotFound } from "./PageNotFound";
 export { default as ProfileRoutes } from "./ProfilePage.jsx";
 // export { default as ProfilePage } from "./ProfilePage.jsx";
 export { default as OrdersListPage } from "./OrdersListPage.jsx";
-export {default as WishListPage} from './WishListPage.jsx'
+// export { default as WishListPage } from "./WishListPage.jsx";

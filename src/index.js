@@ -10,7 +10,6 @@ import store from "./redux/store";
 import {
   Home,
   Product,
-  Products,
   AboutPage,
   ContactPage,
   Cart,

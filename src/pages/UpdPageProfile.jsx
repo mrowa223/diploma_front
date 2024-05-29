@@ -1,7 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const UpdPage = () => {
+  const [formData, setFormData] = useState({
+    firstName: "Daniel",
+    lastName: "Adams",
+    email: "daniel.adams@example.com",
+    phone: "+7 (805) 348 95 72",
+    newPassword: "",
+    confirmPassword: "",
+    subscribe: true,
+  });
+
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    const lengthRegex = /^.{3,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!lengthRegex.test(formData.firstName)) {
+      newErrors.firstName = "First name must be at least 3 characters long.";
+    }
+
+    if (!lengthRegex.test(formData.lastName)) {
+      newErrors.lastName = "Last name must be at least 3 characters long.";
+    }
+
+    if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Email is not valid.";
+    }
+    return newErrors;
+  };
+
+  const handleSubmit = () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length === 0) {
+      const message = `
+        First Name: ${formData.firstName}\n
+        Last Name: ${formData.lastName}\n
+        Email: ${formData.email}\n
+        Phone: ${formData.phone}\n
+        Subscribe: ${formData.subscribe ? "Yes" : "No"}
+      `;
+      alert(message);
+      // Updating state to force re-render
+      setFormData({ ...formData });
+    } else {
+      setErrors(validationErrors);
+    }
+  };
+
   return (
     <div>
       <style>
@@ -195,169 +252,170 @@ a.list-group-item, .list-group-item-action {
         href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
         rel="stylesheet"
       />
-      <div class="container mt-5">
-        <div class="row">
-          <div class="col-lg-4 pb-5">
+      <div className="container mt-5">
+        <div className="row">
+          <div className="col-lg-4 pb-5">
             {/* <!-- Account Sidebar--> */}
-            <div class="author-card pb-3">
+            <div className="author-card pb-3">
               <div
-                class="author-card-cover"
+                className="author-card-cover"
                 // style="background-image: url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);"
               >
                 <a
-                  class="btn btn-style-1 btn-white btn-sm"
+                  className="btn btn-style-1 btn-white btn-sm"
                   href="#"
                   data-toggle="tooltip"
                   title=""
                   data-original-title="You currently have 290 Reward points to spend"
                 >
-                  <i class="fa fa-award text-md"></i>&nbsp;290 points
+                  <i className="fa fa-award text-md"></i>&nbsp;290 points
                 </a>
               </div>
-              <div class="author-card-profile">
-                <div class="author-card-avatar">
+              <div className="author-card-profile">
+                <div className="author-card-avatar">
                   <img
                     src="https://bootdey.com/img/Content/avatar/avatar1.png"
                     alt="Daniel Adams"
                   />
                 </div>
-                <div class="author-card-details">
-                  <h5 class="author-card-name text-lg">Daniel Adams</h5>
-                  <span class="author-card-position">
+                <div className="author-card-details">
+                  <h5 className="author-card-name text-lg">{formData.firstName}</h5>
+                  <span className="author-card-position">
                     Joined February 06, 2017
                   </span>
                 </div>
               </div>
             </div>
-            <div class="wizard">
-              <nav class="list-group list-group-flush">
-                <Link to="/orders-list" class="list-group-item">
-                  <div class="d-flex justify-content-between align-items-center">
+            <div className="wizard">
+              <nav className="list-group list-group-flush">
+                <Link to="/orders-list" className="list-group-item">
+                  <div className="d-flex justify-content-between align-items-center">
                     <div>
-                      <i class="fe-icon-shopping-bag mr-1 text-muted"></i>
-
-                      <div class=" no-underline d-inline-block font-weight-medium text-uppercase ">
+                      <i className="fe-icon-shopping-bag mr-1 text-muted"></i>
+                      <div className=" no-underline d-inline-block font-weight-medium text-uppercase ">
                         Orders List
                       </div>
                     </div>
-                    <span class="badge badge-secondary">6</span>
+                    <span className="badge badge-secondary">6</span>
                   </div>
                 </Link>
-                <a class="list-group-item active" href="#">
-                  <i class="fe-icon-user text-muted"></i>Profile Settings
+                <a className="list-group-item active" href="#">
+                  <i className="fe-icon-user text-muted"></i>Profile Settings
                 </a>
-                <a class="list-group-item" href="#">
-                  <i class="fe-icon-map-pin text-muted"></i>Addresses
-                </a>
-                <Link to="" class="list-group-item">
-                  {" "}
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                      <i class="fe-icon-tag mr-1 text-muted"></i>
-                      <div class="d-inline-block font-weight-medium text-uppercase">
-                        My Tickets
-                      </div>
-                    </div>
-                    <span class="badge badge-secondary">4</span>
-                  </div>
-                </Link>
               </nav>
             </div>
           </div>
           {/* <!-- Profile Settings--> */}
-          <div class="col-lg-8 pb-5">
-            <form class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="account-fn">First Name</label>
+          <div className="col-lg-8 pb-5">
+            <form className="row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="account-fn">First Name</label>
                   <input
-                    class="form-control"
+                    className="form-control"
                     type="text"
                     id="account-fn"
-                    value="Daniel"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
                     required=""
                   />
+                  {errors.firstName && <div className="text-danger">{errors.firstName}</div>}
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="account-ln">Last Name</label>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="account-ln">Last Name</label>
                   <input
-                    class="form-control"
+                    className="form-control"
                     type="text"
                     id="account-ln"
-                    value="Adams"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
                     required=""
                   />
+                  {errors.lastName && <div className="text-danger">{errors.lastName}</div>}
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="account-email">E-mail Address</label>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="account-email">E-mail Address</label>
                   <input
-                    class="form-control"
+                    className="form-control"
                     type="email"
                     id="account-email"
-                    value="daniel.adams@example.com"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     disabled=""
                   />
+                  {errors.email && <div className="text-danger">{errors.email}</div>}
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="account-phone">Phone Number</label>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="account-phone">Phone Number</label>
                   <input
-                    class="form-control"
+                    className="form-control"
                     type="text"
                     id="account-phone"
-                    value="+7 (805) 348 95 72"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
                     required=""
                   />
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="account-pass">New Password</label>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="account-pass">New Password</label>
                   <input
-                    class="form-control"
+                    className="form-control"
                     type="password"
                     id="account-pass"
+                    name="newPassword"
+                    value={formData.newPassword}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="account-confirm-pass">Confirm Password</label>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="account-confirm-pass">Confirm Password</label>
                   <input
-                    class="form-control"
+                    className="form-control"
                     type="password"
                     id="account-confirm-pass"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
-              <div class="col-12">
-                <hr class="mt-2 mb-3" />
-                <div class="d-flex flex-wrap justify-content-between align-items-center">
-                  <div class="custom-control custom-checkbox d-block">
+              <div className="col-12">
+                <hr className="mt-2 mb-3" />
+                <div className="d-flex flex-wrap justify-content-between align-items-center">
+                  <div className="custom-control custom-checkbox d-block">
                     <input
-                      class="custom-control-input"
+                      className="custom-control-input"
                       type="checkbox"
                       id="subscribe_me"
-                      checked=""
+                      name="subscribe"
+                      checked={formData.subscribe}
+                      onChange={handleChange}
                     />
-                    <label class="custom-control-label" for="subscribe_me">
+                    <label
+                      className="custom-control-label"
+                      htmlFor="subscribe_me"
+                    >
                       Subscribe me to Newsletter
                     </label>
                   </div>
                   <button
-                    class="btn btn-style-1 btn-primary"
+                    className="btn btn-style-1 btn-primary"
                     type="button"
-                    data-toast=""
-                    data-toast-position="topRight"
-                    data-toast-type="success"
-                    data-toast-icon="fe-icon-check-circle"
-                    data-toast-title="Success!"
-                    data-toast-message="Your profile updated successfuly."
+                    onClick={handleSubmit}
                   >
                     Update Profile
                   </button>

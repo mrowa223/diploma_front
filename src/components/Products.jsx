@@ -6,7 +6,6 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 import { Link } from "react-router-dom";
-import { Navbar } from "../commons";
 
 const Products = () => {
   const [data, setData] = useState([]);

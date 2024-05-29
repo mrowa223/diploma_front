@@ -1,4 +1,3 @@
-import { ProfileRoutes } from "./ProfilePage.jsx";
 
 export { default as Home } from "./Home";
 export { default as Products } from "../components/Products.jsx";

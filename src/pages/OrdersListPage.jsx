@@ -1,8 +1,6 @@
 import React from "react";
 import {
   Navbar,
-  Main,
-  Product,
   Footer,
   // WishListPage,
 

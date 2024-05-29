@@ -10,13 +10,15 @@
 
 // const baseUrl = 'https://087b-5-34-1-61.ngrok-free.app';
 
-const baseUrl = "api";
+const baseUrl = "http://104.248.234.194:8080";
+// const baseUrl = "/api";
+
 
 const fetchJson = async (url, options) => {
-  const response = await fetch(baseUrl + "/api" + url, options);
+  const response = await fetch(baseUrl + url, options);
   if (!response.ok) {
     throw new Error(
-      `Request failed: ${response.status} ${response.statusText}`,
+      `Request failed: ${response.status} ${response.statusText}`
     );
   }
   return await response.json();
@@ -25,6 +27,7 @@ const fetchJson = async (url, options) => {
 export const registerUser = async (userData) => {
   return await fetchJson("/public/register", {
     method: "POST",
+    // mode: "cors",
     headers: {
       // Authorization:
       "Content-Type": "application/json",

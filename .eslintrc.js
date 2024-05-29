@@ -20,6 +20,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
+  plugins: ["unused-imports"],
   rules: {
     "no-unused-vars": "warn",
     "comma-dangle": "off", // eslint-disable-next-line prettier/prettier
@@ -32,6 +33,16 @@ module.exports = {
         arrowParens: "always",
         useTabs: false, // eslint-disable-next-line prettier/prettier
         endOfLine: "auto",
+      },
+    ],
+    "unused-imports/no-unused-imports": "warn",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      {
+        vars: "all",
+        varsIgnorePattern: "^_",
+        args: "after-used",
+        argsIgnorePattern: "^_",
       },
     ],
   },

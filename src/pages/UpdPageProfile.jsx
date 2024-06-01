@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const UpdPage = () => {
@@ -12,6 +12,30 @@ const UpdPage = () => {
     subscribe: true,
   });
 
+  useEffect(() => {
+    const fetchData = async () => {
+      // Simulated fetched JSON data
+      const json = {
+        buyer: {
+          name: "John",
+          surname: "Doe"
+        },
+        username: "john.doe@example.com"
+      };
+
+      setFormData({
+        firstName: json.buyer.name || "",
+        lastName: json.buyer.surname || "",
+        email: json.username || "",
+        phone: "",
+        newPassword: "",
+        confirmPassword: "",
+        subscribe: true,
+      });
+    };
+
+    fetchData();
+  }, []);
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -57,8 +81,35 @@ const UpdPage = () => {
     } else {
       setErrors(validationErrors);
     }
+
   };
 
+// enable server
+  // const handleSubmit = () => {
+  //   const validationErrors = validate();
+  //   if (Object.keys(validationErrors).length === 0) {
+  //     // Отправка на сервер Изменение профиля
+  //    const response = await fetch(http://localhost:8080/api/private/buyer/change/,  {
+  //         method: "GET",
+  //         // mode: "cors",
+  //         headers: {
+  //           "Authorization": token_,
+  //           "Content-Type": "application/json",
+  //         },
+  //        body: {
+  //         "id": 0,
+  //         "name": ${formData.firstName},
+  //          ....
+  //       }
+  //       });
+  //    //
+  //     setFormData({ ...formData });
+  //   } else {
+  //     setErrors(validationErrors);
+  //   }
+  // };
+
+  
   return (
     <div>
       <style>
@@ -279,7 +330,9 @@ a.list-group-item, .list-group-item-action {
                   />
                 </div>
                 <div className="author-card-details">
-                  <h5 className="author-card-name text-lg">{formData.firstName}</h5>
+                  <h5 className="author-card-name text-lg">
+                    {formData.firstName}
+                  </h5>
                   <span className="author-card-position">
                     Joined February 06, 2017
                   </span>
@@ -320,7 +373,9 @@ a.list-group-item, .list-group-item-action {
                     onChange={handleChange}
                     required=""
                   />
-                  {errors.firstName && <div className="text-danger">{errors.firstName}</div>}
+                  {errors.firstName && (
+                    <div className="text-danger">{errors.firstName}</div>
+                  )}
                 </div>
               </div>
               <div className="col-md-6">
@@ -335,7 +390,9 @@ a.list-group-item, .list-group-item-action {
                     onChange={handleChange}
                     required=""
                   />
-                  {errors.lastName && <div className="text-danger">{errors.lastName}</div>}
+                  {errors.lastName && (
+                    <div className="text-danger">{errors.lastName}</div>
+                  )}
                 </div>
               </div>
               <div className="col-md-6">
@@ -350,20 +407,51 @@ a.list-group-item, .list-group-item-action {
                     onChange={handleChange}
                     disabled=""
                   />
-                  {errors.email && <div className="text-danger">{errors.email}</div>}
+                  {errors.email && (
+                    <div className="text-danger">{errors.email}</div>
+                  )}
                 </div>
               </div>
               <div className="col-md-6">
                 <div className="form-group">
-                  <label htmlFor="account-phone">Phone Number</label>
+                  <label htmlFor="account-email">E-mail Address</label>
                   <input
                     className="form-control"
-                    type="text"
-                    id="account-phone"
-                    name="phone"
-                    value={formData.phone}
+                    type="email"
+                    id="account-email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleChange}
-                    required=""
+                    disabled=""
+                  />
+                  {errors.email && (
+                    <div className="text-danger">{errors.email}</div>
+                  )}
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="account-pass">Phone Number</label>
+                  <input
+                    className="form-control"
+                    type="password"
+                    id="account-pass"
+                    name="newPassword"
+                    value={formData.newPassword}
+                    // onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="account-confirm-pass">Confirm Phone number</label>
+                  <input
+                    className="form-control"
+                    type="password"
+                    id="account-confirm-pass"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
                   />
                 </div>
               </div>

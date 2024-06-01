@@ -5,142 +5,93 @@
 * [Bootstrap](https://getbootstrap.com/)
 
 <!-- -->
-Seller
-POST
-/private/seller/profile/change
-Change seller profile info
+// Это в логине
+ import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+cookies.set('Authorization', Bearer ${authenticationResponse.data.token}, { path: '/' });
 
-Jump to definition
+// import Cookies from 'universal-cookie';
+      const cookies = new Cookies();
+      const token_ = cookies.get('Authorization');
+      const response_ = await fetch("http://localhost:8080/api/public/product/list?page=0&size=100", {
+        method: "GET",
+        // mode: "cors",
+        headers: {
+          //"Authorization": token_,
+          "Content-Type": "application/json",
+        }
+      });
+      const json = await response_.json();
+      const products = [];
+      console.log(json);
 
-POST
-/private/registerSeller
-Register seller account
+      for (const product of json.content) {
+        const image_response = await fetch(http://localhost:8080/api/private/images/${product.image_filename}, {
+          method: "GET",
+          // mode: "cors",
+          headers: {
+            "Authorization": token_,
+            "Content-Type": "application/json",
+          }
+        });
+        product.image_filename = await image_response.text();
+        console.log(product.image_filename);
+        product.name = product.name + "";
+        product.description = product.description + "";
+        product.price = product.price + "";
+        try {
+          product.category = product.categories[0].name;
+        } catch(e) {console.log(1);}
+        if (product)
+          products.push(product);
+      }
 
+      
+Только замени await fetch на какую-нибудь удобнее тебе штуку.
+И везде можешь прописать, как уже написано в профиле.
+const [formData, setFormData] = useState({
+    firstName: "Daniel",
+    lastName: "Adams",
+    email: "daniel.adams@example.com",
+    phone: "+7 (805) 348 95 72",
+    newPassword: "",
+    confirmPassword: "",
+    subscribe: true,
+  });
 
-GET
-/private/seller/profile
-Profile info
+if (json)
+      setFormData({
+        firstName: json.buyer.name + "",
+        lastName: json.buyer.surname + "",
+        email: json.username + "",
+        phone: "",
+        newPassword: "",
+        confirmPassword: "",
+        subscribe: true,
+      });
 
-Jump to definition
-
-GET
-/private/seller/profile/loyalty
-Loyalty of profile
-
-
-Buyer
-Buyer operations
-
-
-
-POST
-/private/buyer/profile/change
-Change profile info
-
-Jump to definition
-
-GET
-/private/buyer/profile
-Profile info
-
-Jump to definition
-
-GET
-/private/buyer/profile/loyalty
-Loyalty of profile
-
-Jump to definition
-
-GET
-/private/buyer/profile/CLV
-CLV of profile
-
-Jump to definition
-Cart
-Cart operations
-
-
-
-POST
-/private/buyer/cart/clear
-Clear cart items
-
-Jump to definition
-
-POST
-/private/buyer/cart/change
-Change cart containtment
-
-Jump to definition
-
-POST
-/private/buyer/cart/changeCart
-Changes cart
-
-Jump to definition
-
-POST
-/private/buyer/cart/add
-Add product to cart
-
-Jump to definition
-
-GET
-/private/buyer/cart/
-Cart info
-
-Jump to definition
-Authentication
-Forgot password endpoints for public
-
-
-
-POST
-/public/register
-Register new user
-
-Jump to definition
-
-POST
-/public/forgot/send
-
-Jump to definition
-
-POST
-/public/forgot/check
-
-Jump to definition
-
-POST
-/public/authenticate
-Login and returns token
-
-Jump to definition
-
-POST
-/private/profile
-Register new user
-
-Jump to definition
-
-POST
-/private/profile/changeTransparentPolicies
-Agree many transparent policies
-
-Order
-Operations for buyers to order
-
-
-
-POST
-/private/buyer/order/create
-Buyer creates order with their cart
-
-GET
-/private/buyer/order/{id}
-Getting specifig of order
-
-
-GET
-/private/buyer/order/list
-Getting list of orders
+Чтобы была модель, которую нужно заполнять значениями.
+В каждом компоненте нужен запрос на сервер, и он берёт с него данные.
+const handleSubmit = () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length === 0) {
+      // Отправка на сервер Изменение профиля
+     const response = await fetch(http://localhost:8080/api/private/buyer/change/,  {
+          method: "GET",
+          // mode: "cors",
+          headers: {
+            "Authorization": token_,
+            "Content-Type": "application/json",
+          },
+         body: {
+          "id": 0,
+          "name": ${formData.firstName},
+           ....
+        }
+        });
+     //
+      setFormData({ ...formData });
+    } else {
+      setErrors(validationErrors);
+    }
+  };

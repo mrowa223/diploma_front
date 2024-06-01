@@ -9,7 +9,6 @@ import store from "./redux/store";
 
 import {
   Home,
-  Product,
   AboutPage,
   ContactPage,
   Cart,
@@ -20,9 +19,12 @@ import {
   OrdersListPage,
 } from "./pages";
 
+import Product from "./components/Product";
 // import WishListPage from "./pages/WishListPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProductsPage from "./pages/ProductsPage";
+import ListSellers from "./sellers/topSellers/ListSellers";
+import OrderInfo from "./pages/Orders/OrderInfo/OrderInfo";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -44,6 +46,8 @@ root.render(
         <Route path="/private/registerSeller" element={<Register />} />
         <Route path="/private/profile" element={<Register />} />
         <Route path="/product/*" element={<PageNotFound />} />
+        <Route path="/list" element={<ListSellers />} />
+        <Route path="/orders-list1" element={<OrderInfo />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Provider>

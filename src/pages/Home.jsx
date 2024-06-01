@@ -1,9 +1,10 @@
-import { Navbar, Main, Product, Footer, ModalWindow } from "../commons";
+import { Navbar, Main, Footer, Product, ModalWindow } from "../commons";
+// import { Product } from "../components";
 function Home() {
   return (
     <>
       <Navbar />
-      <ModalWindow  />
+      <ModalWindow />
       <Main />
       <Product />
       <Footer />

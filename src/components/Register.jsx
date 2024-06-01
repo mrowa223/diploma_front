@@ -1,33 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Footer, Navbar } from "../commons";
 import { Link } from "react-router-dom";
+import api from "../apis/api";
 import { registerUser } from "../apis/authApi"; // Import the registerUser function from authApi
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    // name: '',
-    email: "",
-    password: "",
-  });
+  D
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Call the registerUser function with the form data
+    //const registrationResponse = await registerUser(formData);
+
+    const response = await api("/users", {
+      method: "GET",
+    });
+    console.log("Registration response:", response[0]);
+
+    setFormData({
+      name: "Test",
+      email: response[0].mail == null ? "" : response[0].mail,
+      password: "Test2024!",
+    });
+  };
+
+  // useEffect(() => {}, formData);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Call the registerUser function with the form data
-      const registrationResponse = await registerUser(formData);
-      console.log("Registration response:", registrationResponse);
-      // Optionally, redirect the user to a new page upon successful registration
-    } catch (error) {
-      console.error("Error:", error.message);
-    }
   };
 
   return (

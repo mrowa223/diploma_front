@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Footer, Navbar } from "../commons";
 import { authenticateUser } from "../apis/authApi"; // Import the registerUser function from authApi
+import api from "../apis/api";
+import Cookies from "universal-cookie";
 
 const Login = ({ history }) => {
+  // cookies
+
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     // name: '',
-    email: "",
-    password: "",
+    email: "Test",
+    password: "Test@gmail.com",
   });
-  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -20,10 +25,17 @@ const Login = ({ history }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       // Call the registerUser function with the form data
-      const authenticationResponse = await authenticateUser(formData);
-      console.log("Login response:", authenticationResponse);
+      const response = await api("/users", {
+        method: "GET",
+      });
+      console.log("Login response:", response[0]);
+      // const authenticationResponse = await authenticateUser(formData);
+      // console.log("Login response:", authenticationResponse);
+      // cookies.set('Authorization', Bearer `${authenticationResponse.data.token}`, { path: '/' });
+
       navigate("/");
       // Проверка на успешную аутентификацию
     } catch (error) {

@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import ModalWindow from "./ModalWindow";
+import ModalWindow from "./ModalWindow/ModalWindow";
 import { Link } from "react-router-dom";
 const Home = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -19,7 +19,8 @@ const Home = () => {
       {/* <button onClick={openModal}>Open Modal</button> */}
       {/* <h1>React Modal Example</h1> */}
       {/* <button onClick={openModal}>Open Modal</button> */}
-      <ModalWindow isOpen={isModalOpen} onClose={closeModal} centered>
+{/* Работает */}
+      {/* <ModalWindow isOpen={isModalOpen} onClose={closeModal} centered>
         <div className="modal-content">
           <div className="modal-header d-flex justify-content-between">
             <h5 className="modal-title">Choose your role:</h5>
@@ -38,7 +39,7 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </ModalWindow>
+      </ModalWindow> */}
 
       <div className="hero border-1 pb-3">
         <div className="card bg-dark text-white border-0 mx-3">

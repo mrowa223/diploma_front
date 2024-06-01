@@ -8,8 +8,14 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { Link } from "react-router-dom";
 import { Navbar } from "../commons";
 
+import "../apis/api";
 const ProductsPage = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([
+    {
+      name: "",
+      description: "",
+    },
+  ]);
   const [filter, setFilter] = useState(data);
   const [loading, setLoading] = useState(false);
   let componentMounted = true;
@@ -23,12 +29,22 @@ const ProductsPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
+      // 
       const response = await fetch("https://fakestoreapi.com/products/");
       if (componentMounted) {
         setData(await response.clone().json());
         setFilter(await response.json());
         setLoading(false);
       }
+
+      const products = [];
+      for (const product of response.content) {
+        products.push({
+          name: product.name,
+          description,
+        });
+      }
+      setData(products);
 
       return () => {
         componentMounted = false;
@@ -73,7 +89,6 @@ const ProductsPage = () => {
   const ShowProducts = () => {
     return (
       <>
-       
         <div className="buttons text-center py-5">
           <button
             className="btn btn-outline-dark btn-sm m-2"
@@ -157,7 +172,7 @@ const ProductsPage = () => {
   };
   return (
     <>
-    <Navbar />
+      <Navbar />
       <div className="container my-3 py-3">
         <div className="row">
           <div className="col-12">

@@ -47,7 +47,7 @@ function App() {
             //'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTcxNzI1ODA4MSwiZXhwIjoxNzE3MzQ0NDgxfQ.wphsyuXUZmXCamQHE6LpGg-kSUW9aOOgH8SK1E3RzKw',
           }
         });
-        throw Error("LOL");
+        // throw Error("LOL");
       } catch (error) {
         throwAsyncError(error);
       }

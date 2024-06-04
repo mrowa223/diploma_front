@@ -1,3 +1,14 @@
+:root {
+  --primary-color: #046A37;     /* Green */
+  --light-green: #FAFFFD;       /* Light green */
+  --light-green-hover: #CBDBCA;       /* Light green */
+  --bright-green: #EBFAF6;      /* Brighter shade */
+  --dark-green-hover: #02452B;  /* Darker green on hover */
+  --green-hover: #CADEDA;  /* Darker green on hover */
+  --disabled-bg: #60807B;          /* Disabled button background */
+  --light-gray: #E3E8E6;
+}
+
 .App {
   text-align: center;
 }

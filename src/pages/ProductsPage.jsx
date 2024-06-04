@@ -29,7 +29,6 @@ const ProductsPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       setLoading(true);
-      // 
       const response = await fetch("https://fakestoreapi.com/products/");
       if (componentMounted) {
         setData(await response.clone().json());
@@ -41,7 +40,7 @@ const ProductsPage = () => {
       for (const product of response.content) {
         products.push({
           name: product.name,
-          description,
+          description: "",
         });
       }
       setData(products);

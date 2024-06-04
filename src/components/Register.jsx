@@ -3,25 +3,45 @@ import { Footer, Navbar } from "../commons";
 import { Link } from "react-router-dom";
 import api from "../apis/api";
 import { registerUser } from "../apis/authApi"; // Import the registerUser function from authApi
+import { useAsync } from "react-router-dom";
+import { useAsyncError } from "../commons";
+
+const Test = () => {
+  throw new Error('I crashed!');
+}
+
+function foo() {
+
+  throw new Error('I crashed!');
+}
 
 const Register = () => {
-  D
+  const [formData, setFormData] = useState({
+    email: "Tunaxx@gmail.com",
+    name: "asd",
+    password: "asd",
+  });
+  const throwAsyncError = useAsyncError();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    // Call the registerUser function with the form data
-    //const registrationResponse = await registerUser(formData);
+    try {
+      e.preventDefault();
+      foo();
+      // Call the registerUser function with the form data
+      //const registrationResponse = await registerUser(formData);
+      const response = await api("/users", {
+        method: "GET",
+      });
+      console.log("Registration response:", response[0]);
 
-    const response = await api("/users", {
-      method: "GET",
-    });
-    console.log("Registration response:", response[0]);
-
-    setFormData({
-      name: "Test",
-      email: response[0].mail == null ? "" : response[0].mail,
-      password: "Test2024!",
-    });
+      setFormData({
+        name: "Test",
+        email: response[0].mail == null ? "" : response[0].mail,
+        password: "Test2024!",
+      });
+    } catch (error) {
+      throwAsyncError(error);
+    }
   };
 
   // useEffect(() => {}, formData);
@@ -35,6 +55,7 @@ const Register = () => {
 
   return (
     <>
+
       <Navbar />
       <div className="container my-3 py-3">
         <h1 className="text-center">Register</h1>

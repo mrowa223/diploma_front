@@ -1,55 +1,20 @@
-import { React } from "react";
-import ReactDOM from "react-dom/client";
-import "../node_modules/font-awesome/css/font-awesome.min.css";
-import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import store from "./redux/store";
-// import Example from './pages/Example';
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { ErrorBoundary } from './commons';
 
-import {
-  Home,
-  AboutPage,
-  ContactPage,
-  Cart,
-  Login,
-  Register,
-  Checkout,
-  PageNotFound,
-  OrdersListPage,
-} from "./pages";
-
-import Product from "./components/Product";
-// import WishListPage from "./pages/WishListPage";
-import ProfilePage from "./pages/ProfilePage";
-import ProductsPage from "./pages/ProductsPage";
-import ListSellers from "./sellers/topSellers/ListSellers";
-import OrderInfo from "./pages/Orders/OrderInfo/OrderInfo";
-
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-    <Provider store={store}>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/product" element={<ProductsPage />} />
-        <Route path="/product/:id" element={<Product />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/orders-list" element={<OrdersListPage />} />
-        {/* Add routes for registrations */}
-        <Route path="/private/registerSeller" element={<Register />} />
-        <Route path="/private/profile" element={<Register />} />
-        <Route path="/product/*" element={<PageNotFound />} />
-        <Route path="/list" element={<ListSellers />} />
-        <Route path="/orders-list1" element={<OrderInfo />} />
-        <Route path="*" element={<PageNotFound />} />
-      </Routes>
-    </Provider>
-  </BrowserRouter>
+  <React.StrictMode>
+    <ErrorBoundary>
+    <App />
+    </ErrorBoundary>
+  </React.StrictMode>
 );
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

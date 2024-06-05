@@ -5,14 +5,16 @@ import { authenticateUser } from "../apis/authApi"; // Import the registerUser f
 import api from "../apis/api";
 import Cookies from "universal-cookie";
 
+const cookies = new Cookies();
+
 const Login = ({ history }) => {
   // cookies
 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     // name: '',
-    email: "Test",
-    password: "Test@gmail.com",
+    email: "test@gmail.com",
+    password: "Tunaxx2024!",
   });
 
   const handleChange = (e) => {
@@ -28,13 +30,25 @@ const Login = ({ history }) => {
 
     try {
       // Call the registerUser function with the form data
-      const response = await api("/users", {
-        method: "GET",
+      const response = await api("api/public/authenticate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
-      console.log("Login response:", response[0]);
+      console.log("Login response:", response);
       // const authenticationResponse = await authenticateUser(formData);
       // console.log("Login response:", authenticationResponse);
-      // cookies.set('Authorization', Bearer `${authenticationResponse.data.token}`, { path: '/' });
+      cookies.set(
+        "Authorization",
+        // `Bearer:
+        `${response.data.token}`,
+        { path: "/" }
+      );
 
       navigate("/");
       // Проверка на успешную аутентификацию

@@ -5,10 +5,10 @@ import { addCart } from "../redux/action";
 import Skeleton from "react-loading-skeleton";
 import { Link } from "react-router-dom";
 import { Navbar, Footer } from "../commons";
-
+import "../apis/api";
 import api from "../apis/api";
 
-const ProductsPage = () => {
+const Products = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -130,7 +130,7 @@ const ProductsPage = () => {
               </li>
             </ul>
             <div className="card-body">
-              <Link to={"/product/{id}?id=" + product.id} className="btn btn-dark m-1">
+              <Link to={"/product/" + product.id} className="btn btn-dark m-1">
                 Buy Now
               </Link>
               <button
@@ -148,7 +148,6 @@ const ProductsPage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="container my-3 py-3">
         <div className="row">
           <div className="col-12">
@@ -165,4 +164,4 @@ const ProductsPage = () => {
   );
 };
 
-export default ProductsPage;
+export default Products;

@@ -1,50 +1,49 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Footer, Navbar } from "../commons";
 import { Link } from "react-router-dom";
 import api from "../apis/api";
-import { registerUser } from "../apis/authApi"; // Import the registerUser function from authApi
-import { useAsync } from "react-router-dom";
 import { useAsyncError } from "../commons";
-
-const Test = () => {
-  throw new Error('I crashed!');
-}
-
-function foo() {
-
-  throw new Error('I crashed!');
-}
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    email: "Tunaxx@gmail.com",
-    name: "asd",
-    password: "asd",
+    email: "",
+    name: "",
+    password: "",
   });
   const throwAsyncError = useAsyncError();
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      e.preventDefault();
-      foo();
       // Call the registerUser function with the form data
-      //const registrationResponse = await registerUser(formData);
-      const response = await api("/users", {
-        method: "GET",
+      const response = await api("api/public/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          name: formData.name,
+          password: formData.password,
+        }),
       });
-      console.log("Registration response:", response[0]);
 
+      const data = await response; // Преобразуем ответ в JSON
+      console.log("Registration response:", data);
+
+      // Optionally update formData with response if needed
       setFormData({
-        name: "Test",
-        email: response[0].mail == null ? "" : response[0].mail,
-        password: "Test2024!",
+        email: "",
+        name: "",
+        password: "",
       });
+
+      // Redirect to login page or show a success message
     } catch (error) {
       throwAsyncError(error);
     }
   };
 
-  // useEffect(() => {}, formData);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -55,7 +54,6 @@ const Register = () => {
 
   return (
     <>
-
       <Navbar />
       <div className="container my-3 py-3">
         <h1 className="text-center">Register</h1>

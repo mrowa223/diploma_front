@@ -14,7 +14,7 @@ function Home() {
       <ModalWindow />
       <Main />
       <Products />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

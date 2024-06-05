@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Navbar, Main, Footer, Product, ModalWindow } from "../commons";
+import { Navbar, Main, Footer, Products, ModalWindow } from "../commons";
 // import { Product } from "../components";
 function Home() {
   useEffect(() => {
@@ -13,7 +13,7 @@ function Home() {
       <Navbar />
       <ModalWindow />
       <Main />
-      <Product />
+      <Products />
       <Footer />
     </>
   );

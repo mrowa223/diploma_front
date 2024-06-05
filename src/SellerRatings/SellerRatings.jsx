@@ -1,6 +1,6 @@
 import React from "react";
-import "./ListSellers.css";
-const ListSellers = () => {
+import "./SellerRatings.css";
+const SellerRatings = () => {
   return (
     <div>
       <link
@@ -609,4 +609,4 @@ const ListSellers = () => {
   );
 };
 
-export default ListSellers;
+export default SellerRatings;

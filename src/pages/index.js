@@ -11,6 +11,6 @@ export { default as PageNotFound } from "./PageNotFound.jsx";
 export { default as ProfileRoutes } from "./ProfilePage.jsx";
 // export { default as ProfilePage } from "./ProfilePage.jsx";
 export { default as OrdersListPage } from "./OrdersListPage.jsx";
-
+export { default as ProductPage } from "./ProductPage.jsx";
 export { default as UpdPageProfile } from "./UpdPageProfile.jsx";
 // export { default as WishListPage } from "./WishListPage.jsx";

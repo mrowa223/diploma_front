@@ -6,6 +6,6 @@ module.exports = function (app) {
     createProxyMiddleware({
       target: "http://104.248.234.194:8080",
       changeOrigin: true,
-    }),
+    })
   );
 };

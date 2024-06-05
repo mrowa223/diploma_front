@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ErrorBoundary } from "./commons";
-import * as serviceWorker from "../public/service-worker"; // Исправленная опечатка
+import * as serviceWorker from "./serviceWorkerRegistration";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

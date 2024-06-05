@@ -5,3 +5,5 @@ export { default as PageNotFound } from "../pages/PageNotFound";
 export { default as Product } from "./Product";
 export { default as Register } from "./Register";
 export { default as Table } from "./Table/Table";
+export { default as Tag } from "./Tag/Tag";
+export { default as UserCard } from "./UserCard/UserCard";

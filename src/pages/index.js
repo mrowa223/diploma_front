@@ -9,7 +9,7 @@ export { default as Register } from "../components/Register.jsx";
 export { default as Checkout } from "./CheckoutPage.jsx";
 export { default as PageNotFound } from "./PageNotFound.jsx";
 export { default as ProfileRoutes } from "./ProfilePage.jsx";
-// export { default as ProfilePage } from "./ProfilePage.jsx";
+export { default as ProfilePage } from "./ProfilePage.jsx";
 export { default as OrdersListPage } from "./OrdersListPage.jsx";
 
 export { default as UpdPageProfile } from "./UpdPageProfile.jsx";

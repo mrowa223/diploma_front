@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Dropdown = ({ column, options, handleFilter }) => {
+const Dropdown = ({ column, options = [], handleFilter }) => {
 	const useDropdown = () => {
 	  const [isOpen, setIsOpen] = useState(false);
 

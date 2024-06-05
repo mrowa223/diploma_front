@@ -23,11 +23,9 @@ const api = async (route, request) => {
   // Response processing, saving token into cookies
   const responseJson = await response.json();
   if (responseJson.token)
-    cookies.set(
-      "Authorization",
-      `Bearer ${responseJson.token}`,
-      { path: "/" },
-    );
+    cookies.set("Authorization", `Bearer ${responseJson.token}`, {
+      path: "/",
+    });
 
   return responseJson;
 };

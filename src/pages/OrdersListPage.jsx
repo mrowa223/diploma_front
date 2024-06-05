@@ -1,13 +1,12 @@
 import React from "react";
 import {
   Navbar,
-  Main,
-  Product,
   Footer,
-  WishListPage,
-  OrdersList,
-  UpdPageProfile,
-} from "../components";
+  // WishListPage,
+
+} from "../commons";
+
+import { OrdersList } from "../components/";
 const OrdersListPage = () => {
   return (
     <>

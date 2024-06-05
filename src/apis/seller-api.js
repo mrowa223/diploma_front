@@ -1,48 +1,51 @@
 // sellerApi.js
 
-const baseUrl = 'http://localhost:3000';
+const baseUrl = "http://localhost:3000";
 
 const fetchJson = async (url, options) => {
   const response = await fetch(baseUrl + url, options);
   if (!response.ok) {
-    throw new Error(`Request failed: ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Request failed: ${response.status} ${response.statusText}`,
+    );
   }
   return await response.json();
 };
 
 export const changeSellerProfile = async (profileData) => {
-  return await fetchJson('/private/seller/profile/change', {
-    method: 'POST',
+  return await fetchJson("/private/seller/profile/change", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(profileData)
+    body: JSON.stringify(profileData),
   });
 };
 
 export const agreeTransparentPolicies = async () => {
-  return await fetchJson('/private/seller/profile/changeTransparentPolicies', {
-    method: 'POST'
-  });
+  return await fetchJson(
+    "/private/seller/profile/changeTransparentPolicies",
+    {
+      method: "POST",
+    },
+  );
 };
 
 export const registerSellerAccount = async (sellerData) => {
-  return await fetchJson('/private/registerSeller', {
-    method: 'POST',
+  return await fetchJson("/private/registerSeller", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(sellerData)
+    body: JSON.stringify(sellerData),
   });
 };
 
 export const getSellerProfile = async () => {
-  return await fetchJson('/private/seller/profile', {
-    method: 'GET'
+  return await fetchJson("/private/seller/profile", {
+    method: "GET",
   });
 };
-
-
 
 // import { changeSellerProfile, agreeTransparentPolicies, registerSellerAccount, getSellerProfile } from './sellerApi';
 

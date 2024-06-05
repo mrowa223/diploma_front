@@ -1,70 +1,163 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import api from "../apis/api";
+import { useAsyncError } from '../commons';
+import { Table } from "../components";
 
-const UpdPage = () => {
+const UpdPageProfile = ({ userId, type }) => {
   const [formData, setFormData] = useState({
-    firstName: "Daniel",
-    lastName: "Adams",
-    email: "daniel.adams@example.com",
-    phone: "+7 (805) 348 95 72",
-    newPassword: "",
-    confirmPassword: "",
-    subscribe: true,
   });
+  const [activeSetting, setActiveSetting] = useState(type);
+  const [successMessage, setSuccessMessage] = useState(undefined);
+  const throwAsyncError = useAsyncError();
+
+  const handleSetActiveSetting = (setting) => {
+    const tabs = document.querySelectorAll('.list-group-item');
+    tabs.forEach(tab => {
+      if (tab.id === `tab-${setting}`) {
+        tab.classList.add('active');
+      } else {
+        tab.classList.remove('active');
+      }
+    });
+
+    setActiveSetting(setting);
+  };
 
   useEffect(() => {
+    setActiveSetting(type);
     const fetchData = async () => {
-      // Simulated fetched JSON data
-      const json = {
-        buyer: {
-          name: "John",
-          surname: "Doe"
-        },
-        username: "john.doe@example.com"
-      };
-
-      setFormData({
-        firstName: json.buyer.name || "",
-        lastName: json.buyer.surname || "",
-        email: json.username || "",
-        phone: "",
-        newPassword: "",
-        confirmPassword: "",
-        subscribe: true,
-      });
+      try {
+        const data = await api('/api/private/profile', {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        setFormData(data);
+      } catch (error) {
+        throwAsyncError(error);
+      }
     };
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    handleSetActiveSetting(activeSetting);
+  }, []);
+
   const [errors, setErrors] = useState({});
 
+  function dateToFull(dateString) {
+    const date = new Date(dateString);
+    // Extract the date components
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1; padStart ensures two digits
+    const day = String(date.getDate()).padStart(2, '0'); // padStart ensures two digits
+
+    // Extract the time components
+    const hours = String(date.getHours()).padStart(2, '0'); // padStart ensures two digits
+    const minutes = String(date.getMinutes()).padStart(2, '0'); // padStart ensures two digits
+    const seconds = String(date.getSeconds()).padStart(2, '0'); // padStart ensures two digits
+    const milliseconds = String(date.getMilliseconds()).padStart(6, '0'); // padStart ensures three digits
+
+    // Create the formatted date string
+    const formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+    return formattedDate;
+  }
+
   const handleChange = (e) => {
+
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+
+    // Split the name attribute value by dot
+    const nameParts = name.split('.');
+
+    // Check if there are multiple parts (nested property)
+    if (nameParts.length > 1) {
+      // Create a nested object structure
+      const nestedObject = {
+        [nameParts.slice(1).join('.')]: type === "checkbox" ? checked : type === "date" ? dateToFull(value) : value
+      };
+
+      // Check if buyer already exists in formData
+      if (formData[`${activeSetting}`]) {
+        // If buyer exists, update the nested property
+        setFormData({
+          ...formData,
+          [activeSetting]: {
+            ...formData[`${activeSetting}`],
+            ...nestedObject
+          }
+        });
+      } else {
+        // If buyer doesn't exist, create it as an object and set the nested property
+        setFormData({
+          ...formData,
+          [activeSetting]: {
+            ...nestedObject
+          }
+        });
+      }
+    } else {
+      // If it's not a nested property, update directly
+      setFormData({
+        ...formData,
+        [name]: type === "checkbox" ? checked : type === "date" ? dateToFull(value) : value
+      });
+    }
+
   };
 
-  const validate = () => {
+  const validate = (formData) => {
     const newErrors = {};
     const lengthRegex = /^.{3,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (!lengthRegex.test(formData.firstName)) {
+    if (!lengthRegex.test(formData.name)) {
       newErrors.firstName = "First name must be at least 3 characters long.";
     }
 
-    if (!lengthRegex.test(formData.lastName)) {
+    if (!lengthRegex.test(formData.surname)) {
       newErrors.lastName = "Last name must be at least 3 characters long.";
     }
 
-    if (!emailRegex.test(formData.email)) {
+    if (formData.email && !emailRegex.test(formData.email)) {
       newErrors.email = "Email is not valid.";
     }
+
     return newErrors;
   };
 
+  const handleSubmit = async () => {
+    const validationErrors = validate(formData.buyer);
+    if (Object.keys(validationErrors).length === 0) {
+      try {
+        await api(`/api/private/${activeSetting}/profile/change`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData[`${activeSetting}`])
+        });
+
+        document.querySelector('.success-message').style.animation = 'animation: fadeInOut 2s linear';
+        setSuccessMessage(`Your ${activeSetting} updated successfuly!`);
+        setTimeout(() => {
+          setSuccessMessage(undefined);
+        }, 2000);
+
+      } catch (error) {
+        console.log(error);
+        throwAsyncError(error);
+      }
+    } else {
+      setErrors(validationErrors);
+    }
+  }
+
+  /*
   const handleSubmit = () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length === 0) {
@@ -83,8 +176,9 @@ const UpdPage = () => {
     }
 
   };
+  */
 
-// enable server
+  // enable server
   // const handleSubmit = () => {
   //   const validationErrors = validate();
   //   if (Object.keys(validationErrors).length === 0) {
@@ -109,11 +203,14 @@ const UpdPage = () => {
   //   }
   // };
 
-  
+
   return (
     <div>
-      <style>
-        {`body{
+      <div className={`success-message ${successMessage ? 'animate' : ''}`} style={{ opacity: 0 }}>{successMessage}</div>
+      {formData.id &&
+        <div>
+          <style>
+            {`body{
     background:#eee;    
 }
 .widget-author {
@@ -297,224 +394,471 @@ a.list-group-item, .list-group-item-action {
     color: black;
     text-decoration: none;
   }
+  .custom-control-input {
+    color: var(--primary-color);
+  }
 }`}
-      </style>
-      <link
-        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
-        rel="stylesheet"
-      />
-      <div className="container mt-5">
-        <div className="row">
-          <div className="col-lg-4 pb-5">
-            {/* <!-- Account Sidebar--> */}
-            <div className="author-card pb-3">
-              <div
-                className="author-card-cover"
-                // style="background-image: url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);"
-              >
-                <a
-                  className="btn btn-style-1 btn-white btn-sm"
-                  href="#"
-                  data-toggle="tooltip"
-                  title=""
-                  data-original-title="You currently have 290 Reward points to spend"
-                >
-                  <i className="fa fa-award text-md"></i>&nbsp;290 points
-                </a>
-              </div>
-              <div className="author-card-profile">
-                <div className="author-card-avatar">
-                  <img
-                    src="https://bootdey.com/img/Content/avatar/avatar1.png"
-                    alt="Daniel Adams"
-                  />
+          </style>
+          <link
+            href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+            rel="stylesheet"
+          />
+          <div className="container mt-5">
+            <div className="row">
+              <div className="col-lg-4 pb-5">
+                {/* <!-- Account Sidebar--> */}
+                <div className="author-card pb-3">
+                  <div
+                    className="author-card-cover"
+                  // style="background-image: url(https://bootdey.com/img/Content/flores-amarillas-wallpaper.jpeg);"
+                  >
+                    <a
+                      className="btn btn-style-1 btn-white btn-sm"
+                      href="#"
+                      data-toggle="tooltip"
+                      title=""
+                      data-original-title={`You currently have ${formData.buyer.badges.length} Badges points to spend`}
+                    >
+                      <i className="fa fa-award text-md"></i>&nbsp;{formData.buyer.badges.length} Badges
+                    </a>
+                  </div>
+                  <div className="author-card-profile">
+                    <div className="author-card-avatar">
+                      <img
+                        src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                        alt="Daniel Adams"
+                      />
+                    </div>
+                    <div className="author-card-details">
+                      <h5 className="author-card-name text-lg">
+                        {formData.firstName}
+                      </h5>
+                      <span className="author-card-position">
+                        Registered {new Date(formData.registeredTime).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' })}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="author-card-details">
-                  <h5 className="author-card-name text-lg">
-                    {formData.firstName}
-                  </h5>
-                  <span className="author-card-position">
-                    Joined February 06, 2017
-                  </span>
+                <div className="wizard">
+                  <nav className="list-group list-group-flush">
+                    <a id="tab-user" className="list-group-item bg-bright" href="#" onClick={() => handleSetActiveSetting('user')}>
+                      <i className="fe-icon-user text-muted"></i>User profile
+                    </a>
+                    <a id="tab-buyer" className="list-group-item bg-bright" href="#" onClick={() => handleSetActiveSetting('buyer')}>
+                      <i className="fe-icon-user text-muted"></i>Buyer profile
+                    </a>
+                    <Link to="/orders-list" className="list-group-item bg-middle">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <i className="fe-icon-shopping-bag mr-1 text-muted"></i>
+                          <div className=" no-underline d-inline-block font-weight-medium text-uppercase ">
+                            Orders List
+                          </div>
+                        </div>
+                        <span className="badge badge-secondary">{formData.}</span>
+                      </div>
+                    </Link>
+                    <a id="tab-seller" className="list-group-item bg-bright" href="#" onClick={() => handleSetActiveSetting('seller')}>
+                      <i className="fe-icon-user text-muted"></i>Seller profile
+                    </a>
+                    <Link to="/orders-list" className="list-group-item bg-middle">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <i className="fe-icon-shopping-bag mr-1 text-muted"></i>
+                          <div className=" no-underline d-inline-block font-weight-medium text-uppercase ">
+                            Product list
+                          </div>
+                        </div>
+                        <span className="badge badge-secondary">6</span>
+                      </div>
+                    </Link>
+                  </nav>
                 </div>
               </div>
-            </div>
-            <div className="wizard">
-              <nav className="list-group list-group-flush">
-                <Link to="/orders-list" className="list-group-item">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <div>
-                      <i className="fe-icon-shopping-bag mr-1 text-muted"></i>
-                      <div className=" no-underline d-inline-block font-weight-medium text-uppercase ">
-                        Orders List
+              {/* <!-- Profile Settings--> */}
+              {activeSetting == 'buyer' &&
+                <div className="col-lg-8 pb-5">
+                  <h1>Buyer</h1>
+                  <form className="row">
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-fn">First Name</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="account-fn"
+                          name="buyer.name"
+                          value={formData.buyer.name}
+                          onChange={handleChange}
+                          required=""
+                        />
+                        {errors.firstName && (
+                          <div className="text-danger">{errors.firstName}</div>
+                        )}
                       </div>
                     </div>
-                    <span className="badge badge-secondary">6</span>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-ln">Last Name</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="account-ln"
+                          name="buyer.surname"
+                          value={formData.buyer.surname}
+                          onChange={handleChange}
+                          required=""
+                        />
+                        {errors.lastName && (
+                          <div className="text-danger">{errors.lastName}</div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="account-email">Biography</label>
+                        <textarea
+                          className="form-control"
+                          type="text"
+                          id="account-email"
+                          name="buyer.bio"
+                          value={formData.buyer.bio}
+                          onChange={handleChange}
+                          disabled=""
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-ln">Birthday</label>
+                        <input
+                          className="form-control"
+                          type="date"
+                          id="account-ln"
+                          name="buyer.birthday"
+                          value={formData.buyer.birthday ? new Date(formData.buyer.birthday).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
+                          onChange={handleChange}
+                          required=""
+                        />
+                        {errors.lastName && (
+                          <div className="text-danger">{errors.lastName}</div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="account-commission">Commission</label>
+                        <div class="tooltip-container">
+                          <p class="beautiful-text" data-tooltip="Percentage for making purchases">{formData.buyer.commissionPercentage} %</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="account-buyer-id">Buyer id</label>
+                        <div class="tooltip-container">
+                          <p class="beautiful-text" data-tooltip="Your buyer id">{formData.buyer.id}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <label htmlFor="account-cart">Cart info</label>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="account-cart-id">ID</label>
+                        <div class="tooltip-container">
+                          <p class="beautiful-text" data-tooltip="Your cart id">{formData.buyer.cart.id}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="account-cart">Items count</label>
+                        <div class="tooltip-container">
+                          <p class="beautiful-text" data-tooltip="Cart items count">{formData.buyer.cart.cartItems.length}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="account-cart">Payment method</label>
+                        <div class="tooltip-container">
+                          <p class="beautiful-text" data-tooltip="Payment method for order">{formData.buyer.cart.paymentMethod}&nbsp;</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="account-cart">Shipping address</label>
+                        <div class="tooltip-container">
+                          <p class="beautiful-text" data-tooltip="Shipping address for order">{formData.buyer.cart.shippingAddress}&nbsp;</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <p>You can change your cart in <Link to="/cart" style={{ color: "blue" }}>Cart</Link> page</p>
+                    </div>
+
+                    <div className="col-12">
+                      <hr className="mt-2 mb-3" />
+                      <div className="d-flex flex-wrap justify-content-between align-items-center">
+                        <div className="custom-control custom-checkbox d-block">
+
+                        </div>
+                        <button
+                          className="btn btn-style-1 btn-primary"
+                          type="button"
+                          onClick={handleSubmit}
+                        >
+                          Update Profile
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              }
+              {activeSetting == 'user' &&
+                <div className="col-lg-8 pb-5">
+                  <h1>User</h1>
+                  <form className="row">
+                    <p>ID: {formData.id}</p>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-ln">Email</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          id="account-ln"
+                          value={formData.email}
+                          onChange={(e) => e.stopPropagation()}
+                          required=""
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-ln">Registered time</label>
+                        <input
+                          className="form-control beautiful-text" data-tooltip={formData.registeredTime}
+                          type="date"
+                          id="account-ln"
+                          value={new Date(formData.registeredTime).toISOString().split('T')[0]}
+                          onChange={(e) => e.stopPropagation()}
+                          required=""
+                        />
+                      </div>
+                    </div>
+                  </form>
+
+                  <div className="col-md-6 p-2">
+                    <div className="custom-control custom-checkbox d-block">
+                      <input
+                        className="custom-control-input"
+                        type="checkbox"
+                        name="subscribe"
+                        checked={formData.enabled}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="subscribe_me"
+                      >
+                        Enabled account
+                      </label>
+                    </div>
                   </div>
-                </Link>
-                <a className="list-group-item active" href="#">
-                  <i className="fe-icon-user text-muted"></i>Profile Settings
-                </a>
-              </nav>
+                  <div className="col-md-6 p-2">
+                    <div className="custom-control custom-checkbox d-block">
+                      <input
+                        className="custom-control-input"
+                        type="checkbox"
+                        name="subscribe"
+                        checked={formData.credentialsNonExpired}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="subscribe_me"
+                      >
+                        Non expired credentials
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-md-6 p-2">
+                    <div className="custom-control custom-checkbox d-block">
+                      <input
+                        className="custom-control-input"
+                        type="checkbox"
+                        name="subscribe"
+                        checked={formData.accountNonExpired}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="subscribe_me"
+                      >
+                        Non expired account
+                      </label>
+                    </div>
+                  </div>
+                  <div className="col-md-6 p-2">
+                    <div className="custom-control custom-checkbox d-block">
+                      <input
+                        className="custom-control-input"
+                        type="checkbox"
+                        name="subscribe"
+                        checked={formData.accountNonLocked}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <label
+                        className="custom-control-label"
+                        htmlFor="subscribe_me"
+                      >
+                        Non locked account
+                      </label>
+                    </div>
+                  </div>
+                  <div className="">
+                    <Table initialData={formData.roles} initialTableName="Roles"></Table>
+                  </div>
+                  <div className="">
+                    <Table initialData={[...formData.authenticationTransparentPolicies, { "id": "", "name": "", "type": "", "value": "", "createdTime": "" }]} initialTableName="Transparent Policies"></Table>
+                  </div>
+                </div>
+              }
+              {activeSetting == 'seller' &&
+                <div className="col-lg-8 pb-5">
+                  <h1>Seller</h1>
+                  <form className="row">
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-fn">First Name</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          name="seller.name"
+                          value={formData.seller.name}
+                          onChange={handleChange}
+                          required=""
+                        />
+                        {errors.firstName && (
+                          <div className="text-danger">{errors.firstName}</div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-ln">Last Name</label>
+                        <input
+                          className="form-control"
+                          type="text"
+                          name="seller.surname"
+                          value={formData.seller.surname}
+                          onChange={handleChange}
+                          required=""
+                        />
+                        {errors.lastName && (
+                          <div className="text-danger">{errors.lastName}</div>
+                        )}
+                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <div className="form-group">
+                        <label htmlFor="account-email">Biography</label>
+                        <textarea
+                          className="form-control"
+                          type="text"
+                          name="seller.bio"
+                          value={formData.seller.bio}
+                          onChange={handleChange}
+                          disabled=""
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-ln">Birthday</label>
+                        <input
+                          className="form-control"
+                          type="date"
+                          name="seller.birthday"
+                          value={formData.seller.birthday ? new Date(formData.seller.birthday).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]}
+                          onChange={handleChange}
+                          required=""
+                        />
+                        {errors.lastName && (
+                          <div className="text-danger">{errors.lastName}</div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="account-commission">Commission</label>
+                        <div class="tooltip-container">
+                          <p class="beautiful-text" data-tooltip="Percentage for selling purchases">{formData.seller.commissionPercentage} %</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <label htmlFor="account-seller-id">Seller id</label>
+                        <div class="tooltip-container">
+                          <p class="beautiful-text" data-tooltip="Your seller id">{formData.seller.id}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label htmlFor="account-ln">Registered time</label>
+                        <input
+                          className="form-control beautiful-text" data-tooltip={formData.registeredTime}
+                          type="date"
+                          id="account-ln"
+                          value={new Date(formData.seller.registeredTime).toISOString().split('T')[0]}
+                          onChange={(e) => e.stopPropagation()}
+                          required=""
+                        />
+                      </div>
+                    </div>
+
+                    <div className="col-md-12">
+                      <Table initialData={formData.seller.products} initialTableName="Roles" initialItemsPerPage={5} ></Table>
+                    </div>
+
+                    <div className="col-md-12">
+                      <p>You can see your products in <Link to="/" style={{ color: "blue" }}>Seller products</Link> page</p>
+                    </div>
+
+                    <div className="col-12">
+                      <hr className="mt-2 mb-3" />
+                      <div className="d-flex flex-wrap justify-content-between align-items-center">
+                        <div className="custom-control custom-checkbox d-block">
+
+                        </div>
+                        <button
+                          className="btn btn-style-1 btn-primary"
+                          type="button"
+                          onClick={handleSubmit}
+                        >
+                          Update Profile
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              }
             </div>
           </div>
-          {/* <!-- Profile Settings--> */}
-          <div className="col-lg-8 pb-5">
-            <form className="row">
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="account-fn">First Name</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="account-fn"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    required=""
-                  />
-                  {errors.firstName && (
-                    <div className="text-danger">{errors.firstName}</div>
-                  )}
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="account-ln">Last Name</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    id="account-ln"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleChange}
-                    required=""
-                  />
-                  {errors.lastName && (
-                    <div className="text-danger">{errors.lastName}</div>
-                  )}
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="account-email">E-mail Address</label>
-                  <input
-                    className="form-control"
-                    type="email"
-                    id="account-email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    disabled=""
-                  />
-                  {errors.email && (
-                    <div className="text-danger">{errors.email}</div>
-                  )}
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="account-email">E-mail Address</label>
-                  <input
-                    className="form-control"
-                    type="email"
-                    id="account-email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    disabled=""
-                  />
-                  {errors.email && (
-                    <div className="text-danger">{errors.email}</div>
-                  )}
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="account-pass">Phone Number</label>
-                  <input
-                    className="form-control"
-                    type="password"
-                    id="account-pass"
-                    name="newPassword"
-                    value={formData.newPassword}
-                    // onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="account-confirm-pass">Confirm Phone number</label>
-                  <input
-                    className="form-control"
-                    type="password"
-                    id="account-confirm-pass"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="account-pass">New Password</label>
-                  <input
-                    className="form-control"
-                    type="password"
-                    id="account-pass"
-                    name="newPassword"
-                    value={formData.newPassword}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="col-md-6">
-                <div className="form-group">
-                  <label htmlFor="account-confirm-pass">Confirm Password</label>
-                  <input
-                    className="form-control"
-                    type="password"
-                    id="account-confirm-pass"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="col-12">
-                <hr className="mt-2 mb-3" />
-                <div className="d-flex flex-wrap justify-content-between align-items-center">
-                  <div className="custom-control custom-checkbox d-block">
-                    <input
-                      className="custom-control-input"
-                      type="checkbox"
-                      id="subscribe_me"
-                      name="subscribe"
-                      checked={formData.subscribe}
-                      onChange={handleChange}
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="subscribe_me"
-                    >
-                      Subscribe me to Newsletter
-                    </label>
-                  </div>
-                  <button
-                    className="btn btn-style-1 btn-primary"
-                    type="button"
-                    onClick={handleSubmit}
-                  >
-                    Update Profile
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+        </div>}
     </div>
   );
 };
 
-export default UpdPage;
+export default UpdPageProfile;

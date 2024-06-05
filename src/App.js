@@ -33,27 +33,32 @@ import ProfilePage from "./pages/ProfilePage";
 import ProductsPage from "./pages/ProductsPage";
 import ListSellers from "./SellerRatings/SellerRatings";
 import OrderInfo from "./pages/Orders/OrderInfo/OrderInfo";
-import { useAsyncError } from "./commons";
+import { useAsyncError } from './commons';
+import api from './apis/api';
 
 function App() {
   const throwAsyncError = useAsyncError();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/api/public/product/list", {
-          method: "GET",
+        const response = await api('/api/private/profile', {
+          method: 'POST',
           withCredentials: true,
           headers: {
+            'Content-Type': 'application/json',
             //'Authorization': 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsImlhdCI6MTcxNzI1ODA4MSwiZXhwIjoxNzE3MzQ0NDgxfQ.wphsyuXUZmXCamQHE6LpGg-kSUW9aOOgH8SK1E3RzKw',
           },
+          /*body: JSON.stringify({
+            "email": "test@gmail.com",
+            "password": "Tunaxx2024!",
+          })*/
         });
-        // throw Error("LOL");
       } catch (error) {
         throwAsyncError(error);
       }
-    };
-    fetchData();
-  });
+    }
+    //fetchData();
+  })
 
   return (
     <BrowserRouter>

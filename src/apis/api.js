@@ -7,6 +7,7 @@ const api = async (route, request) => {
   if (!route.includes("public")) {
     const token = cookies.get("Authorization");
     request.headers = {
+      ...request.headers,
       Authorization: token,
     };
   }
@@ -14,18 +15,33 @@ const api = async (route, request) => {
   // Request processing
   console.log(request);
   const response = await fetch(route, request);
-  if (!response.ok) {
+
+  // Response processing, saving token into cookies
+  let responseJson = {};
+  let responseText = "";
+  try {
+    if (response.headers.get('Content-Type').includes('application/json')) {
+      responseJson = await response.json();
+    } else {
+      responseText = await response.text();
+    }
+  } catch (error) {
+    () => {};
+  }
+
+  if (!response.ok || (responseJson && responseJson.error) || response.status != 200) {
+    responseJson.text = responseText;
     throw new Error(
-      `Request failed: ${response.status} ${response.statusText} ${response.text}`,
+      `${response.status}~${response.statusText}~${JSON.stringify(responseJson)}`,
     );
   }
 
-  // Response processing, saving token into cookies
-  const responseJson = await response.json();
-  if (responseJson.token)
-    cookies.set("Authorization", `Bearer ${responseJson.token}`, {
-      path: "/",
-    });
+  if (responseJson.data && responseJson.data.token)
+    cookies.set(
+      "Authorization",
+      `Bearer ${responseJson.data.token}`,
+      { path: "/" },
+    );
 
   return responseJson;
 };
